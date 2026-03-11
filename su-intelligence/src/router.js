@@ -1,17 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Dashboard from "./pages/Dashboard/Dashboard";
-import AIChat from "./pages/AIChat/AIChat";
-import Market from "./pages/Market/Market";
+import AIChat    from "./pages/AIChat/AIChat";
+import Market    from "./pages/Market/Market";
 
-export default function Router() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/ai" element={<AIChat />} />
-        <Route path="/market" element={<Market />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+export const ROUTES = [
+  { path: "/",        page: "dashboard",    label: "Dashboard",    component: Dashboard },
+  { path: "/ai-chat", page: "ai-chat",      label: "AI Chat",      component: AIChat    },
+  { path: "/market",  page: "market",       label: "Market",       component: Market    },
+];
+
+export default ROUTES;

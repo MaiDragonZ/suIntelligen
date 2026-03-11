@@ -1,0 +1,38 @@
+.asset-row td { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.asset-row:last-child td { border-bottom: none; }
+.asset-row:hover td { background: rgba(255,255,255,.015); }
+.asset-row-active td { background: var(--accent-dim) !important; }
+
+.asset-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.asset-badge-lg {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(59,127,245,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.spin-anim { animation: spin .7s linear infinite; }
