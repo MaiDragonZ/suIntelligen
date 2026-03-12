@@ -1,34 +1,41 @@
-const MODELS = [
-  { id: "su-text-ultra",  name: "SU Text Ultra",  type: "Language",   rps: 8820,  latency: 34, health: 100, uptime: "99.99%" },
-  { id: "su-vision-pro",  name: "SU Vision Pro",  type: "Multimodal", rps: 4210,  latency: 72, health: 97,  uptime: "99.94%" },
-  { id: "su-embed-fast",  name: "SU Embed Fast",  type: "Embedding",  rps: 22000, latency: 8,  health: 100, uptime: "100%" },
-  { id: "su-code-assist", name: "SU Code Assist", type: "Code",       rps: 1640,  latency: 55, health: 88,  uptime: "99.71%" },
-];
+import { api } from "./authService";
 
 export async function fetchModels() {
-  await delay(300);
-  return MODELS;
+  return api.get("/ai/models");
 }
 
-export async function sendMessage(modelId, message) {
-  await delay(800 + Math.random() * 600);
-  return {
-    id: Date.now(),
-    role: "assistant",
-    model: modelId,
-    content: `[SU Intelligence — ${modelId}]\n\nThank you for your message: "${message}"\n\nThis is a simulated response from the SU Intelligence platform. In production, this would connect to the real model inference endpoint.`,
-    tokens: Math.floor(Math.random() * 200 + 50),
-    latency: Math.floor(Math.random() * 200 + 80),
-  };
+export async function fetchSessions() {
+  return api.get("/ai/sessions");
+}
+
+export async function fetchSession(sessionId) {
+  return api.get(`/ai/sessions/${sessionId}`);
+}
+
+export async function deleteSession(sessionId) {
+  const { authService } = await import("./authService");
+  const BASE = import.meta.env.VITE_API_URL || "http://localhost:8080/api/v1";
+  const token = authService.getToken();
+  const res = await fetch(`${BASE}/ai/sessions/${sessionId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || "Delete failed");
+  return json.data ?? json;
+}
+
+export async function sendMessage(sessionId, modelId, message) {
+  return api.post("/ai/chat", {
+    session_id: sessionId || "",
+    model_id:   modelId,
+    message,
+  });
 }
 
 export function getModelStats() {
-  return {
-    totalRequests: 1_432_881,
-    avgLatency: 38,
-    activeModels: 4,
-    errorRate: 0.02,
-  };
+  return api.get("/ai/stats");
 }
-
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }

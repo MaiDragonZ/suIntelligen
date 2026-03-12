@@ -1,0 +1,9 @@
+[build]
+  cmd = "go build -o ./tmp/main.exe ./cmd/server/main.go"
+  bin = "./tmp/main.exe"
+  include_ext = ["go", "env"]
+  exclude_dir = ["tmp", "vendor"]
+  delay = 500
+
+[log]
+  time = true

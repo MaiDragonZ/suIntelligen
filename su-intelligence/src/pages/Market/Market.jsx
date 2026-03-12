@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, RefreshCw, Activity } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Card   from "../../components/Card";
-import { fetchAssets, generateChartData } from "../../services/marketService";
+import { fetchAssets, fetchChart } from "../../services/marketService";
 import { formatCurrency, formatPercent }  from "../../utils/format";
 import "./Market.css";
 
@@ -35,8 +35,15 @@ export default function Market() {
   const load = async () => {
     const data = await fetchAssets();
     setAssets(data);
+    // ดึง chart ทุก symbol พร้อมกัน
+    const chartResults = await Promise.allSettled(
+      data.map(a => fetchChart(a.symbol))
+    );
     const ch = {};
-    data.forEach(a => { ch[a.symbol] = generateChartData(24); });
+    data.forEach((a, i) => {
+      const r = chartResults[i];
+      ch[a.symbol] = r.status === "fulfilled" ? r.value : [];
+    });
     setCharts(ch);
     if (!selected) setSelected(data[0]?.symbol ?? null);
     setLoading(false);

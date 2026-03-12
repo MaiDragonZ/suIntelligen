@@ -20,7 +20,7 @@ const BOTTOM = [
   { id: "logout",   label: "Sign Out", icon: LogOut     },
 ];
 
-export default function Sidebar({ activePage, onNavigate }) {
+export default function Sidebar({ activePage, onNavigate, user, onLogout }) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -70,10 +70,12 @@ export default function Sidebar({ activePage, onNavigate }) {
       {/* User card */}
       {!collapsed && (
         <div className="sidebar-user">
-          <div className="user-avatar">SU</div>
+          <div className="user-avatar">
+            {(user?.name || user?.email || "SU").slice(0, 2).toUpperCase()}
+          </div>
           <div className="user-info">
-            <span className="user-name">Admin User</span>
-            <span className="user-role">Super Admin</span>
+            <span className="user-name">{user?.name || user?.email || "Admin"}</span>
+            <span className="user-role">{user?.role || "User"}</span>
           </div>
           <button className="user-bell">
             <Bell size={14} />
@@ -85,7 +87,9 @@ export default function Sidebar({ activePage, onNavigate }) {
       {/* Bottom */}
       <div className="sidebar-bottom">
         {BOTTOM.map(item => (
-          <button key={item.id} className="nav-item bottom-item" title={collapsed ? item.label : undefined}>
+          <button key={item.id} className="nav-item bottom-item"
+            title={collapsed ? item.label : undefined}
+            onClick={item.id === "logout" ? onLogout : undefined}>
             <span className="nav-icon"><item.icon size={15} /></span>
             {!collapsed && <span className="nav-label">{item.label}</span>}
           </button>
